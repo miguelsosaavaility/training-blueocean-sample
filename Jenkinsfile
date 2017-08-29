@@ -13,11 +13,28 @@ pipeline {
         archiveArtifacts 'target/*.war'
       }
     }
-    stage('Test') {
+    stage('Backend') {
       steps {
-        sh './jenkins/test-all.sh'
-        junit '**/test-results/karma/*.xml'
-        junit '**/surefire-reports/**/*.xml'
+        parallel(
+          "Backend": {
+            sh './jenkins/test-backend.sh'
+            junit '**/surefire-reports/**/*.xml'
+            
+          },
+          "Frontend": {
+            sh './jenkins/test-frontend.sh'
+            archiveArtifacts '**/test-results/karma/*.xml'
+            
+          },
+          "Static": {
+            sh './jenkins/test-static.sh'
+            
+          },
+          "Performance": {
+            sh './jenkins/test-performance.sh'
+            
+          }
+        )
       }
     }
   }
