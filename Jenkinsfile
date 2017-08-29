@@ -10,6 +10,7 @@ pipeline {
     stage('Build') {
       steps {
         sh './jenkins/build.sh'
+        archiveArtifacts 'target/*.war'
       }
     }
     stage('Archive') {
@@ -20,6 +21,7 @@ pipeline {
     stage('Test') {
       steps {
         sh './jenkins/test-all.sh'
+        junit '**/test-results/karma/*.xml'
       }
     }
   }
