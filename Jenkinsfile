@@ -13,15 +13,11 @@ pipeline {
         archiveArtifacts 'target/*.war'
       }
     }
-    stage('Archive') {
-      steps {
-        archiveArtifacts 'target/*.war'
-      }
-    }
     stage('Test') {
       steps {
         sh './jenkins/test-all.sh'
         junit '**/test-results/karma/*.xml'
+        junit '**/surefire-reports/**/*.xml'
       }
     }
   }
